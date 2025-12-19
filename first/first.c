@@ -1,5 +1,7 @@
 // include using quotes because it's not a system library
-#include "toolbox.h"
+#include "types.h"
+#include "video.h"
+#include "colors.h"
 #include "smol.h"
 
 int main() {

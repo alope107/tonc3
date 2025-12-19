@@ -1,25 +1,7 @@
-#ifndef TOOLBOX_H
-#define TOOLBOX
+#include "types.h"
 
-// Short names for unsigned datatypes
-// Emphasizes sizes
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-// volatile types - used to indeicate to compiler that seemingly useless writes shouldn't be optimized away
-// commonly used for registers / mmap :o
-typedef volatile u8 vu8;
-typedef volatile u16 vu16;
-typedef volatile u32 vu32;
-
-// Colors are short halfwords
-// Extra typedef for conceptual clarity
-typedef u16 COLOR;
-
-// static - internal to the file, not global
-// inline - compiler hint that maybe don't actually make a whole function?
-#define INLINE static inline
+#ifndef VIDEO_H
+#define VIDEO_H
 
 // Where the memory registers for I/O are located
 #define MEM_IO      0x04000000
@@ -57,30 +39,7 @@ typedef u16 COLOR;
 // I want vid_mem to be addressable as a 2d array
 // So, I need to cast MEM_VRAM as a pointer to an array of 240 u16s
 // Asterisk needs to be paren so it's a pointer to an array instead of an array of pointers
-#define vid_mem ((volatile u16 (*)[SCREEN_WIDTH])MEM_VRAM) 
-
-INLINE void m3_plot(int x, int y, COLOR clr) {
-    vid_mem[y][x] = clr;
-}
-
-// Some colors!
-// GBA colors are 15 bit BGR
-// The subpixels are laid out bgr on the physical screen, and that's why it's not rgb
-// Wacky!
-#define CLR_BLACK   0x0000
-#define CLR_RED     0x001F
-#define CLR_LIME    0x03E0
-#define CLR_YELLOW  0x03FF
-#define CLR_BLUE    0x7C00
-#define CLR_MAG     0x7C1F
-#define CLR_CYAN    0x7FE0
-#define CLR_WHITE   0x7FFF
-
-// u32 means things will be automatically scaled up
-// also cpu is 32 bit anyway, so shorts aren't needed
-INLINE COLOR RGB15(u32 red, u32 green, u32 blue) {
-    return red | (green << 5) | (blue <<10);
-}
+#define vid_mem ((vu16 (*)[SCREEN_WIDTH])MEM_VRAM) 
 
 #define REG_VCOUNT (*(vu16*)0x04000006)
 
