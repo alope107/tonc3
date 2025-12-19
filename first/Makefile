@@ -33,7 +33,7 @@ SPECS := -specs=gba.specs
 
 # all c files in the current directory
 # wildcard means do expansion immediately
-SRCS := $(wildcard *.c)
+SRCS := $(wildcard *.c ../shared/*.c)
 # Will later be a list of object files
 OBJS := $(SRCS:.c=.o)
 # a d file for each c file

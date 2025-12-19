@@ -4,6 +4,9 @@
 #include "colors.h"
 #include "smol.h"
 
+// From global state
+extern u16 key_current, key_prev;
+
 int main() {
 
     // Setting up the GBA modes
@@ -13,7 +16,7 @@ int main() {
     u32 offset = 0;
 
     while(1) {
-        m3_plot(120 + offset, 80, YAH);
+        m3_plot(120 + offset, 80 + key_current, YAH);
         m3_plot(136 + offset, 80, CLR_LIME);
         m3_plot(120 + offset, 96, CLR_BLUE);
         for(u32 j = 0; j < 10; j++) {
