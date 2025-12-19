@@ -7,10 +7,19 @@ int main() {
     // Mode 3 (bitmap mode) and background 2 active
     REG_DISPCNT = DCNT_MODE3 | DCNT_BG2;
 
+    u32 offset = 0;
+
+    while(1) {
+        m3_plot(120 + offset, 80, CLR_RED);
+        m3_plot(136 + offset, 80, CLR_LIME);
+        m3_plot(120 + offset, 96, CLR_BLUE);
+        for(u32 j = 0; j < 10; j++) {
+            vsync();
+        }
+        offset++;
+    }
     // plot 3 dots!
-    m3_plot(120, 80, CLR_RED);
-    m3_plot(136, 80, CLR_LIME);
-    m3_plot(120, 96, CLR_BLUE);
+    
 
     
 

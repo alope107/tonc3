@@ -12,6 +12,11 @@ TARGET := $(PROJ)
 # Will later be a list of object files
 OBJS := $(PROJ).o
 
+# Temporary fix for updating with headers
+# correct way to do it is with -MMD .d files
+# will explore later!
+HEADERS := toolbox.h
+
 # all devkit arm tools we'll use start with this prefix
 PREFIX := arm-none-eabi-
 #use gcc for both compiling and linking
@@ -54,7 +59,7 @@ build: $(TARGET).gba
 # % is wildcard
 # The multiple colons is for a static pattern rule
 # Every .o needs a .c
-$(OBJS) : %.o : %.c
+$(OBJS) : %.o : %.c $(HEADERS)
 # -c compiles without linking
 # Maybe we do this in separate steps to better recognize where changes are needed?
 # gcc gets called once per file out of date

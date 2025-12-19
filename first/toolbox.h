@@ -2,10 +2,16 @@
 #define TOOLBOX
 
 // Short names for unsigned datatypes
-// Reingforces sizes
+// Emphasizes sizes
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
+
+// volatile types - used to indeicate to compiler that seemingly useless writes shouldn't be optimized away
+// commonly used for registers / mmap 
+typedef volatile u8 vu8;
+typedef volatile u16 vu16;
+typedef volatile u32 vu32;
 
 // Colors are short halfwords
 // Extra typedef for conceptual clarity
@@ -74,6 +80,16 @@ INLINE void m3_plot(int x, int y, COLOR clr) {
 // also cpu is 32 bit anyway, so shorts aren't needed
 INLINE COLOR RGB15(u32 red, u32 green, u32 blue) {
     return red | (green << 5) | (blue <<10);
+}
+
+#define REG_VCOUNT (*(vu16*)0x04000006)
+
+// blocks until the start of the next VBlank
+// inefficent busy loop
+// will be better handled with interrupts later
+void vsync() {
+    while(REG_VCOUNT >=160); // we are currently in VBlank, wait until the next one
+    while(REG_VCOUNT < 160); // we are currently in VDraw, wait until VBlank
 }
 
 #endif
