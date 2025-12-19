@@ -21,7 +21,7 @@ LD      := $(PREFIX)gcc
 OBJCOPY := $(PREFIX)objcopy
 
 # mthumb-interwork is needed so ARM and THUMB code can be used together
-ARCH  := mthumb-interwork -mthumb
+ARCH  := -mthumb-interwork -mthumb
 
 #gba.specs is for cart, gba_mb.specs is for multiboot. We're doing cart
 #used during linking
