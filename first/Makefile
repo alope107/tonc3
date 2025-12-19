@@ -15,7 +15,7 @@ OBJS := $(PROJ).o
 # Temporary fix for updating with headers
 # correct way to do it is with -MMD .d files
 # will explore later!
-HEADERS := toolbox.h
+HEADERS := ../shared/toolbox.h
 
 # all devkit arm tools we'll use start with this prefix
 PREFIX := arm-none-eabi-
@@ -24,6 +24,8 @@ CC      := $(PREFIX)gcc
 LD      := $(PREFIX)gcc
 # used for copying from one object file to another (maybe will be used to convert .o to .gba?)
 OBJCOPY := $(PREFIX)objcopy
+
+INCLUDE := ../shared
 
 # mthumb-interwork is needed so ARM and THUMB code can be used together
 ARCH  := -mthumb-interwork -mthumb
@@ -66,7 +68,7 @@ $(OBJS) : %.o : %.c $(HEADERS)
 # $< is the first prereq (the c file name)
 # $@ is the target name (the object file name)
 # -o is for specifying the name of the object file to create
-	$(CC) -c $< $(CFLAGS) -o $@
+	$(CC) -I$(INCLUDE) -c $< $(CFLAGS) -o $@
 
 # LINK
 # used for making the elf file (executable linkable file)
