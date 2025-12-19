@@ -9,13 +9,10 @@ PROJ := first
 # Unclear why tonc includes this variable? Feels redundant?
 TARGET := $(PROJ)
 
-# Will later be a list of object files
-OBJS := $(PROJ).o
 
-# Temporary fix for updating with headers
-# correct way to do it is with -MMD .d files
-# will explore later!
-HEADERS := ../shared/toolbox.h
+
+
+HEADERS := $(wildcard ../shared/*.h *.h)
 
 # all devkit arm tools we'll use start with this prefix
 PREFIX := arm-none-eabi-
@@ -34,12 +31,21 @@ ARCH  := -mthumb-interwork -mthumb
 #used during linking
 SPECS := -specs=gba.specs
 
+# all c files in the current directory
+# wildcard means do expansion immediately
+SRCS := $(wildcard *.c)
+# Will later be a list of object files
+OBJS := $(SRCS:.c=.o)
+# a d file for each c file
+DEPS := $(SRCS:.c=.d)
 
 # Flags for compiling
 # O2 - moderate optimization tradeoff between speed and size
 # Wall - all warnings on
 # fno-strict-aliasing allows for pointers of different types to point to the same data (used for our pointer tricks like writing multiple 16 bits with a single 32 bit write)
-CFLAGS := $(ARCH) -O2 -Wall -fno-strict-aliasing
+# -MMD make .d files for registering what depends on what
+# -MP make phony targets for header files (so if a header is deleted but is in an old .d, we don't get issues)
+CFLAGS := $(ARCH) -O2 -Wall -fno-strict-aliasing -MMD -MP
 
 # Flags for linking
 LDFLAGS := $(ARCH) $(SPECS)
@@ -61,7 +67,8 @@ build: $(TARGET).gba
 # % is wildcard
 # The multiple colons is for a static pattern rule
 # Every .o needs a .c
-$(OBJS) : %.o : %.c $(HEADERS)
+$(OBJS) : %.o : %.c
+# -I sets the include path
 # -c compiles without linking
 # Maybe we do this in separate steps to better recognize where changes are needed?
 # gcc gets called once per file out of date
@@ -92,6 +99,8 @@ $(TARGET).gba : $(TARGET).elf
 #gbafix will fix the ROM header to make it GBA compatible
 	-@gbafix $@
 
+-include $(DEPS)
+
 # clean up
 # no prereqs
 clean : 
@@ -101,3 +110,4 @@ clean :
 	@rm -fv *.gba
 	@rm -fv *.elf
 	@rm -fv *.o
+	@rm -fv *.d
