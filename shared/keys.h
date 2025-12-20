@@ -52,4 +52,34 @@ INLINE u32 key_hit(u32 key) { return key_current & ~key_prev & key;}
 
 // Returns if a key was just released this frame (was down last frame, now is up)
 INLINE u32 key_released(u32 key) {return ~key_current & key_prev & key;}
+
+
+// Bit index of each key
+enum keyIndex {
+    KI_A=0,
+    KI_B,
+    KI_SELECT,
+    KI_START, 
+    KI_RIGHT,
+    KI_LEFT,
+    KI_UP,
+    KI_DOWN,
+    KI_R,
+    KI_L
+};
+
+// Returns 0 if the bits at plusI and minusI are equal (both/neither set), else
+// 1 if the bit at plusI is set, else
+// -1 if minusI is set
+INLINE int bit_tribool(u32 pressed, int plusI, int minusI){
+    return ((pressed >> plusI) & 1) - ((pressed >> minusI) & 1);
+}
+
+INLINE int key_tri_horiz() {
+    return bit_tribool(key_current, KI_RIGHT, KI_LEFT);
+}
+
+INLINE int key_tri_vert() {
+    return bit_tribool(key_current, KI_DOWN, KI_UP);
+}
 #endif

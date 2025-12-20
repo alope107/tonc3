@@ -11,17 +11,17 @@ int main() {
     // Mode 3 (bitmap mode) and background 2 active
     REG_DISPCNT = DCNT_MODE3 | DCNT_BG2;
 
-    u32 offset = 0;
+    u32 xoffset = 0;
+    u32 yoffset = 0;
 
     while(1) {
-        m3_plot(120 + offset, 80, YAH);
-        m3_plot(136 + offset, 80, CLR_LIME);
-        m3_plot(120 + offset, 96, CLR_BLUE);
+        m3_plot(120 + xoffset, 80 + yoffset, YAH);
+        m3_plot(136 + xoffset, 80 + yoffset, CLR_LIME);
+        m3_plot(120 + xoffset, 96 + yoffset, CLR_BLUE);
         vsync();
         key_poll();
-        if(key_hit(KEY_RIGHT)) {
-            offset += 1;
-        }
+        xoffset += key_tri_horiz();
+        yoffset += key_tri_vert();
     }
     // plot 3 dots!
     
